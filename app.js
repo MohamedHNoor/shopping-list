@@ -1,6 +1,7 @@
 const form = document.getElementById('item-form')
 const input = document.getElementById('item-input')
 const list = document.getElementById('item-list')
+const clearAllBtn = document.getElementById('clear')
 
 // add new Item function
 function addItem(e) {
@@ -45,6 +46,11 @@ function removeItem(e) {
   }
 }
 
+function clearItems(e) {
+  e.target.previousElementSibling.remove()
+}
+
 // event listener
 form.addEventListener('submit', addItem)
 list.addEventListener('click', removeItem)
+clearAllBtn.addEventListener('click', clearItems)
