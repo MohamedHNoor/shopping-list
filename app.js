@@ -56,19 +56,38 @@ function createIcon(classes) {
   return icon
 }
 
-function removeItem(e) {
+function onClickItem(e) {
   if (e.target.parentElement.classList.contains('remove-item')) {
-    if (confirm('Are you sure?')) {
-      e.target.parentElement.parentElement.remove()
-      checkUI()
-    }
+    removeItem(e.target.parentElement.parentElement)
   }
+}
+
+function removeItem(item) {
+  if (confirm('Are you sure?')) {
+    // remove from the DOM
+    item.remove()
+
+    // remove from Storage
+    removeItemFromStorage(item.textContent)
+    checkUI()
+  }
+}
+
+function removeItemFromStorage(item) {
+  let itemsFromStorage = getItemsFromStorage()
+
+  // filter out item to removed
+  itemsFromStorage = itemsFromStorage.filter((i) => i !== item)
+
+  // re-set items to storage
+  localStorage.setItem('items', JSON.stringify(itemsFromStorage))
 }
 
 function clearItems() {
   while (list.firstChild) {
     list.removeChild(list.firstChild)
   }
+  localStorage.removeItem('items')
   checkUI()
 }
 
@@ -124,7 +143,7 @@ function checkUI() {
 function init() {
   // event listener
   form.addEventListener('submit', onSubmit)
-  list.addEventListener('click', removeItem)
+  list.addEventListener('click', onClickItem)
   clearBtn.addEventListener('click', clearItems)
   filterItem.addEventListener('input', filterItems)
   document.addEventListener('DOMContentLoaded', displayItems)
